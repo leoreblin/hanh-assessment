@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  database:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=YourStrong@Passw0rd
+    ports:
+      - "1433:1433"
+    volumes:
+      - sql-data:/var/opt/mssql
+
+  webapi:
+    build:
+      context: .
+      dockerfile: Hosts/WebAPI/Dockerfile
+    container_name: webapi
+    depends_on:
+      - database
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=database;Database=HanhTestDb;User Id=sa;Password=YourStrong@Passw0rd;
+    ports:
+      - "5000:80"
+
+  workerservice:
+    build:
+      context: .
+      dockerfile: Hosts/WorkerService/Dockerfile
+    container_name: workerservice
+    depends_on:
+      - database
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=database;Database=HanhTestDb;User Id=sa;Password=YourStrong@Passw0rd;
+
+volumes:
+  sql-data:
