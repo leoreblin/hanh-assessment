@@ -14,8 +14,10 @@ internal sealed class DogRepository(AppDbContext context) : IDogRepository
     public async Task<PagedList<Breed>> GetBreedsAsync(
         PaginateQuery paginate,
         Func<Breed, bool>? filter = null,
-        CancellationToken cancellationToken = default) 
-            => await _context.Set<Breed>().ToPagedListAsync(paginate, filter, cancellationToken);
+        CancellationToken cancellationToken = default)
+            => await _context.Set<Breed>()
+                .OrderBy(b => b.Attributes.BreedName)
+                .ToPagedListAsync(paginate, filter, cancellationToken);
 
     public async Task<Breed?> GetBreedByIdAsync(Guid breedId, CancellationToken cancellationToken = default)
         => await _context.Set<Breed>().FirstOrDefaultAsync(
