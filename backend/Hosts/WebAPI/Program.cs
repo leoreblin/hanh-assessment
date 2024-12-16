@@ -12,6 +12,18 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddCors(options =>
+{
+	options.AddPolicy("CorsDev", policy =>
+	{
+		policy
+			.AllowAnyOrigin()
+			.AllowAnyMethod()
+			.AllowAnyHeader();
+	});
+});
+
 builder.Services.AddPersistence(builder.Configuration);
 builder.Services.AddScoped<IDataSeeder, AppDbContextSeeder>();
 
@@ -52,6 +64,8 @@ if (app.Environment.IsDevelopment())
 		throw;
 	}
 }
+
+app.UseCors("CorsDev");
 
 app.UseHttpsRedirection();
 
