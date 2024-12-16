@@ -33,9 +33,11 @@
     </table>
 
     <div class="pagination">
+      <button @click="goToPage(1)" :disabled="totalPages == 0 || currentPage == 1">First</button>
       <button @click="goToPage(currentPage - 1)" :disabled="currentPage <= 1">Previous</button>
       <span>Page {{ currentPage }} of {{ totalPages }}</span>
       <button @click="goToPage(currentPage + 1)" :disabled="currentPage >= totalPages">Next</button>
+      <button @click="goToPage(totalPages)" :disabled="totalPages == 1 || currentPage == totalPages">Last</button>
     </div>
   </div>
 </template>
