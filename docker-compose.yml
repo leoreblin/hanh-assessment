@@ -11,29 +11,34 @@ services:
       - "1433:1433"
     volumes:
       - sql-data:/var/opt/mssql
+    healthcheck:
+      test: ["CMD-SHELL", "sqlcmd -S localhost -U sa -P YourStrong@Passw0rd -Q 'SELECT 1'"]
+      interval: 10s
+      retries: 10
+      start_period: 30s
 
   webapi:
     build:
       context: .
-      dockerfile: Hosts/WebAPI/Dockerfile
+      dockerfile: backend/Hosts/WebAPI/Dockerfile
     container_name: webapi
     depends_on:
       - database
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DefaultConnection=Server=database;Database=HanhTestDb;User Id=sa;Password=YourStrong@Passw0rd;
+      - ConnectionStrings__DefaultConnection=Server=database;Database=HanhTestDb;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True;
     ports:
       - "5000:80"
 
   workerservice:
     build:
       context: .
-      dockerfile: Hosts/WorkerService/Dockerfile
+      dockerfile: backend/Hosts/WorkerService/Dockerfile
     container_name: workerservice
     depends_on:
       - database
     environment:
-      - ConnectionStrings__DefaultConnection=Server=database;Database=HanhTestDb;User Id=sa;Password=YourStrong@Passw0rd;
+      - ConnectionStrings__DefaultConnection=Server=database;Database=HanhTestDb;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True;
 
 volumes:
   sql-data:
