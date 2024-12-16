@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Persistence.Context;
 using Persistence.Extensions;
 using Rest.DogApi;
+using WebAPI.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,6 +38,8 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Application.
 
 builder.Services.AddHangfireJobs(builder.Configuration);
 
+builder.Services.AddTransient<GlobalExceptionHandlerMiddleware>();
+
 var app = builder.Build();
 
 using var scope = app.Services.CreateScope();
@@ -48,9 +51,6 @@ app.MapGet("/", () => "Web API is running with Hangfire dashboard.");
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-
     var services = scope.ServiceProvider;
 	try
 	{
@@ -65,11 +65,24 @@ if (app.Environment.IsDevelopment())
 	}
 }
 
+app.UseSwagger(c =>
+{
+    c.RouteTemplate = "swagger/{documentName}/swagger.json";
+    c.SerializeAsV2 = true;
+});
+
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+});
+
 app.UseCors("CorsDev");
 
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 
 app.MapControllers();
 
