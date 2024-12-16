@@ -42,7 +42,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, onMounted } from 'vue';
-import { fetchDogsBreeds } from '../services/dogApiService';
+import { fetchDogsBreeds } from '../services/DogApiService';
 import { Breed } from '../models/Breed';
 import { PaginatedResponse } from '../shared/PaginatedResponse'
 
