@@ -16,6 +16,5 @@ public sealed class DogsController(ISender sender) : ControllerBase
     public async Task<IActionResult> GetDogsBreedsAsync(
         [FromQuery] GetBreedsQueryData queryData,
         CancellationToken cancellationToken)
-        => Ok(await _sender.Send(new GetBreedsQuery(queryData, cancellationToken)
-            , cancellationToken));
+        => Ok(await _sender.Send(new GetBreedsQuery(queryData), cancellationToken));
 }

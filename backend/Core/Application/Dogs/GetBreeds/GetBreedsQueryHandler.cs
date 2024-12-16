@@ -22,6 +22,6 @@ internal sealed class GetBreedsQueryHandler(IDogRepository dogRepository)
             b => b.Attributes.BreedName.Contains(request.QueryData.Name, StringComparison.CurrentCultureIgnoreCase)
               : null;
 
-        return await _dogRepository.GetBreedsAsync(paginateQuery, filter, request.CancellationToken);
+        return await _dogRepository.GetBreedsAsync(paginateQuery, filter, cancellationToken);
     }
 }
