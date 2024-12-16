@@ -2,7 +2,7 @@ import axios from 'axios';
 import { Breed } from '../models/Breed';
 import { PaginatedResponse } from '../shared/PaginatedResponse';
 
-const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
+const apiBaseUrl = 'http://localhost:5114/api/v1';
 
 export async function fetchDogsBreeds(
   pageNumber: number = 1,
